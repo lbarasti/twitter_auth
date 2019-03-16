@@ -1,6 +1,6 @@
 # twitter_auth
 
-TODO: Write a description here
+TwitterAuth is a library that simplifies adding the "login with Twitter" functionality to your Crystal web application.
 
 ## Installation
 
@@ -16,11 +16,45 @@ TODO: Write a description here
 
 ## Usage
 
+Assuming the credentials of your application are exposed as environment variable, the following will set up the authentication client.
 ```crystal
 require "twitter_auth"
+
+consumer_key = ENV["TWITTER_CONSUMER_KEY"]
+consumer_secret = ENV["TWITTER_CONSUMER_SECRET"]
+callback_url = ENV["TWITTER_CALLBACK_URL"]
+http_client = <your implementation here>
+
+auth_client = TwitterAPI.new(consumer_key, consumer_secret, callback_url, http_client)
 ```
 
-TODO: Write usage instructions here
+Mind that you are required to provide your own implementation of an http client. This is to keep your project's dependencies clean.
+
+If you're using Kemal or a similar library, then you can add the following endpoints
+
+```crystal
+get "/" do |ctx|
+  if not authenticated?(ctx) # the definition of authenticated? is up to you
+    ctx.redirect "/authenticate"
+  end
+  <your-code-here> # serve home page
+end
+
+get "/authenticate" do |ctx|
+  request_token = auth_client.get_token.oauth_token
+  <your-code-here> # store the request token for later verification in the /callback-url step
+  ctx.redirect "https://api.twitter.com/oauth/authenticate?oauth_token=#{request_token}"
+end
+
+get "/callback-url" do |ctx|
+  token = ctx.params.query["oauth_token"]
+  <your-code-here> # verify that the token matches the request token stored in the step above
+  verifier = ctx.params.query["oauth_verifier"]
+  token, secret = auth_client.upgrade_token(token, verifier)
+  <your-code-here> # store the access token and secret - to be used for future authenticated requests to the TwitterAPI
+  ctx.redirect "/"
+end
+```
 
 ## Development
 
