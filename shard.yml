@@ -1,0 +1,13 @@
+name: twitter_auth
+version: 0.1.0
+
+authors:
+  - lbarasti
+
+dependencies:
+  case_class:
+    github: lbarasti/case_class
+
+crystal: 0.27.2
+
+license: MIT
