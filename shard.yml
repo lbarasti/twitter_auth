@@ -5,9 +5,9 @@ authors:
   - lbarasti
 
 dependencies:
-  case_class:
-    github: lbarasti/case_class
+  dataclass:
+    github: lbarasti/dataclass
 
-crystal: 0.27.2
+crystal: 0.31.1
 
 license: MIT

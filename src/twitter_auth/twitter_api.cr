@@ -1,5 +1,5 @@
 require "./twitter_auth"
-require "case_class"
+require "dataclass"
 
 class TwitterAPI
   @@oauth_version = "1.0"
@@ -71,7 +71,7 @@ class TwitterAPI
   end
 
   
-  case_class TokenResponse{oauth_token : String, oauth_token_secret : String}
+  dataclass TokenResponse{oauth_token : String, oauth_token_secret : String}
   
   class TokenResponse
     def self.from_response_body(res_body : Hash(String, String)) : TokenResponse
