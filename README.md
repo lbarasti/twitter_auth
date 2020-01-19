@@ -1,3 +1,7 @@
+[![GitHub release](https://img.shields.io/github/release/lbarasti/twitter_auth.svg)](https://github.com/lbarasti/twitter_auth/releases)
+![Build Status](https://github.com/lbarasti/twitter_auth/workflows/build/badge.svg)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 # twitter_auth
 
 TwitterAuth is a library that simplifies adding the "login with Twitter" functionality to your Crystal web application.
@@ -9,7 +13,7 @@ TwitterAuth is a library that simplifies adding the "login with Twitter" functio
    ```yaml
    dependencies:
      twitter_auth:
-       github: your-github-user/twitter_auth
+       github: lbarasti/twitter_auth
    ```
 
 2. Run `shards install`
@@ -62,7 +66,7 @@ TODO: Write development instructions here
 
 ## Contributing
 
-1. Fork it (<https://github.com/your-github-user/twitter_auth/fork>)
+1. Fork it (<https://github.com/lbarasti/twitter_auth/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
@@ -70,4 +74,4 @@ TODO: Write development instructions here
 
 ## Contributors
 
-- [lorenzo.barasti](https://github.com/your-github-user) - creator and maintainer
+- [lbarasti](https://github.com/lbarasti) - creator and maintainer
