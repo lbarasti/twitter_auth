@@ -1,5 +1,6 @@
 require "./twitter_auth"
 require "dataclass"
+require "http"
 
 class TwitterAPI
   @@oauth_version = "1.0"
@@ -7,8 +8,22 @@ class TwitterAPI
   @@access_token_url = "https://api.twitter.com//oauth/access_token"
   @@verify_credentials_url = "https://api.twitter.com/1.1/account/verify_credentials.json"
 
+  DefaultClient = -> (
+    method : Symbol,
+    url : String,
+    headers : Hash(String, String),
+    query_params : Hash(String, String)
+  ) {
+    http_params = HTTP::Params.encode(query_params)
+    http_headers = HTTP::Headers.new.tap { |hh| headers.each {|(k,v)| hh[k] = v} }
+    uri = URI.parse(url + "?" + http_params)
+    method_str = method.to_s.upcase
+
+    HTTP::Client.exec(method_str, uri, http_headers).body
+  }
+
   def initialize(@consumer_key : String, @consumer_secret : String,
-    @callback_url : String, @post : Proc(Symbol, String, Hash(String, String), Hash(String, String), String))
+    @callback_url : String, @post : Proc(Symbol, String, Hash(String, String), Hash(String, String), String) = DefaultClient)
     @t_auth = TwitterAuth.new(@consumer_secret)
   end
 
