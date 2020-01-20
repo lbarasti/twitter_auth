@@ -1,0 +1,19 @@
+name: kemal-twitter-auth
+version: 0.1.0
+
+authors:
+  - lbarasti <lbarasti@users.noreply.github.com>
+
+targets:
+  kemal-twitter-auth:
+    main: server.cr
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
+  dataclass:
+    github: lbarasti/dataclass
+
+crystal: 0.32.1
+
+license: MIT
