@@ -9,7 +9,7 @@ class TwitterAuth
 
     def signing_key : String
         [@consumer_secret, @token_secret]
-            .map { |secret| URI.escape(secret)}.join("&")
+            .map { |secret| TwitterAuth.escape(secret)}.join("&")
     end
 
     def signature(data : String) : String
@@ -24,13 +24,13 @@ class TwitterAuth
     end
 
     def self.parameter_string(parameters : Hash(String, String))
-        parameters.map{|k,v| "#{URI.escape(k)}=#{URI.escape(v)}"}.sort.join("&")
+        parameters.map{|k,v| "#{TwitterAuth.escape(k)}=#{TwitterAuth.escape(v)}"}.sort.join("&")
     end
 
     def self.signature_base_string(http_method : String, base_url : String, parameter_string : String) : String
         "#{http_method.upcase}\
-            &#{URI.escape(base_url)}\
-            &#{URI.escape(parameter_string)}"
+            &#{TwitterAuth.escape(base_url)}\
+            &#{TwitterAuth.escape(parameter_string)}"
     end
 
     # generate a unique token your application should generate for each unique request
@@ -40,5 +40,9 @@ class TwitterAuth
 
     def self.signature_method : String
         @@signature_method
+    end
+
+    def self.escape(params : String) : String
+        URI.encode_www_form(params, space_to_plus: false)
     end
 end

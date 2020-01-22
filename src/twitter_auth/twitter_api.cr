@@ -81,7 +81,7 @@ class TwitterAPI
 
   def auth_header(method : String, url : String, auth_params : Hash(String, String), auth = @t_auth) : String
     nonce = TwitterAuth.nonce()
-    timestamp = Time::Format.new("%s").format(Time.now)
+    timestamp = Time.utc.to_unix.to_s
     auth_params.merge!({
       "oauth_consumer_key" => @consumer_key,
       "oauth_nonce" => nonce,
@@ -94,7 +94,7 @@ class TwitterAPI
 
     auth_params["oauth_signature"] = oauth_signature
 
-    "OAuth #{auth_params.map{ |k,v| "#{k}=\"#{URI.escape(v)}\"" }.join(", ")}"
+    "OAuth #{auth_params.map{ |k,v| "#{k}=\"#{TwitterAuth.escape(v)}\"" }.join(", ")}"
   end
 
   def self.parse_token_response(res) : TokenResponse
