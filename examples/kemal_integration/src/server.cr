@@ -52,9 +52,14 @@ end
 
 get "/logout" do |ctx|
   app_token = ctx.request.headers["token"]?
+  halt(ctx, status_code: 403, response: "Forbidden") if app_token.nil?
+  credentials = Users[app_token]?
+  halt(ctx, status_code: 403, response: "Forbidden") if credentials.nil?
+  
+  auth_client.invalidate_token(credentials)
   Users.delete(app_token)
+  
   ctx.redirect "/"
-  # TODO: call invalidate_token, https://developer.twitter.com/en/docs/basics/authentication/api-reference/invalidate_access_token
 end
 
 Kemal.run 8090

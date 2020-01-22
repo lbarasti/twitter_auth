@@ -7,6 +7,7 @@ class TwitterAPI
   @@request_token_url = "https://api.twitter.com/oauth/request_token"
   @@access_token_url = "https://api.twitter.com//oauth/access_token"
   @@verify_credentials_url = "https://api.twitter.com/1.1/account/verify_credentials.json"
+  @@invalidate_token_url = "https://api.twitter.com/1.1/oauth/invalidate_token"
 
   DefaultClient = -> (
     method : Symbol,
@@ -50,6 +51,9 @@ class TwitterAPI
     TwitterAPI.parse_token_response(body)
   end
 
+  # Returns a representation of the requesting user if authentication was successful;
+  # raises an exception if not. Use this method to test if supplied user credentials are valid.
+  # https://developer.twitter.com/en/docs/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials
   def verify(token : TokenResponse)
     user_auth = TwitterAuth.new(@consumer_secret, token.oauth_token_secret)
 
@@ -59,6 +63,21 @@ class TwitterAPI
 
     @post.call(:get, @@verify_credentials_url,
       {"Authorization" => self.auth_header("get", @@verify_credentials_url, auth_params, user_auth)}, {} of String => String)
+  end
+
+  # Revoke an issued OAuth access_token by presenting its client credentials.
+  # Once an access_token has been invalidated, new creation attempts will yield a different
+  # Access Token and usage of the invalidated token will no longer be allowed.
+  # https://developer.twitter.com/en/docs/basics/authentication/api-reference/invalidate_access_token
+  def invalidate_token(token : TokenResponse)
+    user_auth = TwitterAuth.new(@consumer_secret, token.oauth_token_secret)
+
+    auth_params = {
+      "oauth_token" => token.oauth_token
+    }
+
+    @post.call(:post, @@invalidate_token_url,
+      {"Authorization" => self.auth_header("post", @@invalidate_token_url, auth_params, user_auth)}, {} of String => String)
   end
 
   def auth_header(method : String, url : String, auth_params : Hash(String, String), auth = @t_auth) : String

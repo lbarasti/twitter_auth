@@ -47,6 +47,11 @@ describe TwitterAPI do
         auth_header.should contain(
           "oauth_token=\"#{URI.escape(oauth_token_access)}\"")
         "{\"id\": #{user_id},\"id_str\": \"#{user_id}\"}"
+      when "https://api.twitter.com/1.1/oauth/invalidate_token"
+        # See https://developer.twitter.com/en/docs/basics/authentication/api-reference/invalidate_access_token
+        auth_header.should contain(
+          "oauth_token=\"#{URI.escape(oauth_token_access)}\"")
+        "{\"access_token\":\"#{oauth_token_access}\"}"
       else
         raise Exception.new("Unexpected Twitter URL")
       end
@@ -75,6 +80,11 @@ describe TwitterAPI do
   describe "#verify" do
     it "returns a representation of the requesting user" do
       api.verify(access_token).should contain(user_id)
+    end
+  end
+  describe "#invalidate_token" do
+    it "returns the token itself, if a valid token is passed" do
+      api.invalidate_token(access_token).should contain(oauth_token_access)
     end
   end
 end
