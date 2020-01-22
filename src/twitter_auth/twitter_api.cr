@@ -85,7 +85,7 @@ class TwitterAPI
     auth_params.merge!({
       "oauth_consumer_key" => @consumer_key,
       "oauth_nonce" => nonce,
-      "oauth_signature_method" => TwitterAuth.signature_method,
+      "oauth_signature_method" => TwitterAuth::SignatureMethod,
       "oauth_timestamp" => timestamp,
       "oauth_version" => @@oauth_version
     })

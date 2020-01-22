@@ -40,7 +40,7 @@ describe TwitterAuth do
   end
   
   it "stores the signature method" do
-    TwitterAuth.signature_method.should be("HMAC-SHA1")
+    TwitterAuth::SignatureMethod.should be("HMAC-SHA1")
   end
 
   it "can generate an oauth parameter string" do

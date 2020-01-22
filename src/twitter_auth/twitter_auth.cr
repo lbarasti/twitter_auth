@@ -2,7 +2,7 @@ require "uri"
 require "openssl/hmac"
 
 class TwitterAuth
-  @@signature_method = "HMAC-SHA1"
+  SignatureMethod = "HMAC-SHA1"
 
   def initialize(@consumer_secret : String, @token_secret : String = "")
   end
@@ -36,10 +36,6 @@ class TwitterAuth
   # generate a unique token your application should generate for each unique request
   def self.nonce() : String
     Random::Secure.base64(32).gsub(/[^a-zA-Z]/, "")
-  end
-
-  def self.signature_method : String
-    @@signature_method
   end
 
   def self.escape(params : String) : String
