@@ -4,11 +4,6 @@ version: 0.1.0
 authors:
   - lbarasti
 
-dependencies:
-  dataclass:
-    github: lbarasti/dataclass
-    version: 1.1.0
-
 crystal: 0.32.1
 
 license: MIT

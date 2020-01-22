@@ -11,8 +11,6 @@ targets:
 dependencies:
   kemal:
     github: kemalcr/kemal
-  dataclass:
-    github: lbarasti/dataclass
 
 crystal: 0.32.1
 

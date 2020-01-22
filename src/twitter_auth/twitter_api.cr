@@ -1,5 +1,4 @@
 require "./twitter_auth"
-require "dataclass"
 require "http"
 
 class TwitterAPI
@@ -105,15 +104,17 @@ class TwitterAPI
   end
 
   
-  dataclass TokenResponse{oauth_token : String, oauth_token_secret : String}
-  
-  class TokenResponse
+  record TokenResponse, oauth_token : String, oauth_token_secret : String do
     def self.from_response_body(res_body : Hash(String, String)) : TokenResponse
       if ["true", nil].includes?(res_body["oauth_callback_confirmed"]?)
         TokenResponse.new(res_body["oauth_token"], res_body["oauth_token_secret"])
       else
         raise CallbackNotConfirmed.new
       end
+    end
+
+    def [](idx : Int32)
+      [oauth_token, oauth_token_secret][idx]
     end
   end
 
