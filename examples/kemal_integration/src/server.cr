@@ -5,16 +5,17 @@ require "uuid"
 consumer_key = ENV["TWITTER_CONSUMER_KEY"]
 consumer_secret = ENV["TWITTER_CONSUMER_SECRET"]
 callback_url = ENV["TWITTER_CALLBACK_URL"]
+callback_path = URI.parse(callback_url).path
 
 auth_client = TwitterAPI.new(consumer_key, consumer_secret, callback_url)
 
 Users = Hash(String, TwitterAPI::TokenResponse).new
-record UserCredentials, token : String, secret : String
+Tokens = Set(String).new
 
-def authenticated?(ctx) : Bool
-  auth_header = ctx.request.headers["Authorization"]?
-  puts "auth_header: #{auth_header}"  
-  return !auth_header.nil?
+def credentials(ctx) : {String?, TwitterAPI::TokenResponse?}
+  app_token = ctx.request.headers["token"]?
+  twitter_token = app_token.try{ Users[app_token]? }
+  {app_token, twitter_token}
 end
 
 get "/" do |ctx|
@@ -23,18 +24,22 @@ end
 
 get "/authenticate" do |ctx|
   request_token = auth_client.get_token.oauth_token
-  # <your-code-here> # store the request token for later verification in the /callback-url step
+  # store the request token for later verification in the /callback-url step
+  Tokens.add request_token
   ctx.redirect "https://api.twitter.com/oauth/authenticate?oauth_token=#{request_token}"
 end
 
-get "/request-token-callback" do |ctx|
+get callback_path do |ctx|
   token = ctx.params.query["oauth_token"]
-  # <your-code-here> # verify that the token matches the request token stored in the step above
+  # verify that the token matches the request token stored in the step above
+  halt(ctx, status_code: 400) unless Tokens.includes? token
+  Tokens.delete(token)
+
   verifier = ctx.params.query["oauth_verifier"]
   token, secret = auth_client.upgrade_token(token, verifier)
-  # <your-code-here> # store the access token and secret - to be used for future authenticated requests to the TwitterAPI
   
   app_token = UUID.random.to_s
+  # store the access token and secret - to be used for future authenticated requests to the TwitterAPI
   Users[app_token] = TwitterAPI::TokenResponse.new(token, secret)
 
   ctx.response.headers.add "Location", "/?token=#{app_token}"
@@ -42,21 +47,18 @@ get "/request-token-callback" do |ctx|
 end
 
 get "/verify" do |ctx|
-  app_token = ctx.request.headers["token"]?
-  halt(ctx, status_code: 403, response: "Forbidden") if app_token.nil?
-  credentials = Users[app_token]?
-  halt(ctx, status_code: 403, response: "Forbidden") if credentials.nil?
+  _, twitter_token = credentials(ctx)
+  halt(ctx, status_code: 401) if twitter_token.nil?
+
   ctx.response.content_type = "application/json"
-  auth_client.verify(credentials)
+  auth_client.verify(twitter_token)
 end
 
 get "/logout" do |ctx|
-  app_token = ctx.request.headers["token"]?
-  halt(ctx, status_code: 403, response: "Forbidden") if app_token.nil?
-  credentials = Users[app_token]?
-  halt(ctx, status_code: 403, response: "Forbidden") if credentials.nil?
+  app_token, twitter_token = credentials(ctx)
+  halt(ctx, status_code: 401) if twitter_token.nil?
   
-  auth_client.invalidate_token(credentials)
+  auth_client.invalidate_token(twitter_token)
   Users.delete(app_token)
   
   ctx.redirect "/"
