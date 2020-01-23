@@ -33,7 +33,7 @@ If you're using Kemal or a similar library, then you can add the following endpo
 get "/authenticate" do |ctx|
   request_token = auth_client.get_token.oauth_token
   <your-code-here> # store the request token for later verification in the /callback-url step
-  ctx.redirect "https://api.twitter.com/oauth/authenticate?oauth_token=#{request_token}"
+  ctx.redirect TwitterAPI.authenticate_url(request_token)
 end
 
 get "/callback-url" do |ctx|

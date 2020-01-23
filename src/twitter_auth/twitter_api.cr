@@ -7,6 +7,11 @@ class TwitterAPI
   @@access_token_url = "https://api.twitter.com//oauth/access_token"
   @@verify_credentials_url = "https://api.twitter.com/1.1/account/verify_credentials.json"
   @@invalidate_token_url = "https://api.twitter.com/1.1/oauth/invalidate_token"
+  @@authenticate_url = "https://api.twitter.com/oauth/authenticate?oauth_token=%s"
+
+  def self.authenticate_url(request_token : String)
+    @@authenticate_url % request_token
+  end
 
   DefaultClient = -> (
     method : Symbol,

@@ -87,4 +87,10 @@ describe TwitterAPI do
       api.invalidate_token(access_token).should contain(oauth_token_access)
     end
   end
+  describe "TwitterAPI.authenticate_url" do
+    it "returns the /authenticate URL with the given token as query string parameter" do
+      url = TwitterAPI.authenticate_url("my-token")
+      url.should eq "https://api.twitter.com/oauth/authenticate?oauth_token=my-token"
+    end
+  end
 end
