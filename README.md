@@ -20,30 +20,16 @@ TwitterAuth is a library that simplifies adding the "login with Twitter" functio
 
 ## Usage
 
-Assuming the credentials of your application are exposed as environment variable, the following will set up the authentication client.
+Here is how you can initialise a Twitter authentication client:
 ```crystal
 require "twitter_auth"
 
-consumer_key = ENV["TWITTER_CONSUMER_KEY"]
-consumer_secret = ENV["TWITTER_CONSUMER_SECRET"]
-callback_url = ENV["TWITTER_CALLBACK_URL"]
-http_client = <your implementation here>
-
-auth_client = TwitterAPI.new(consumer_key, consumer_secret, callback_url, http_client)
+auth_client = TwitterAPI.new(consumer_key, consumer_secret, callback_url)
 ```
 
-Mind that you are required to provide your own implementation of an http client. This is to keep your project's dependencies clean.
-
-If you're using Kemal or a similar library, then you can add the following endpoints
+If you're using Kemal or a similar library, then you can add the following endpoints to implement a [3-legged OAuth flow](https://developer.twitter.com/en/docs/basics/authentication/oauth-1-0a/obtaining-user-access-tokens).
 
 ```crystal
-get "/" do |ctx|
-  if not authenticated?(ctx) # the definition of authenticated? is up to you
-    ctx.redirect "/authenticate"
-  end
-  <your-code-here> # serve home page
-end
-
 get "/authenticate" do |ctx|
   request_token = auth_client.get_token.oauth_token
   <your-code-here> # store the request token for later verification in the /callback-url step
@@ -62,7 +48,27 @@ end
 
 ## Development
 
-TODO: Write development instructions here
+### Running the tests
+```
+crystal spec
+```
+
+### Running the example app
+Before running the example app, make sure the following environment variables are defined consistently with your Twitter app settings - you can define a new Twitter app [here](https://developer.twitter.com/en/apps/):
+```
+TWITTER_CONSUMER_KEY
+TWITTER_CONSUMER_SECRET
+TWITTER_CALLBACK_URL
+```
+Mind that, in order to get the app to work locally, you'll need to have `localhost:8090/your-callback-path` in the app's _callback URL_ list.
+
+Next, run the following.
+```
+$ cd examples/kemal_integration
+$ shards install
+$ crystal src/server.cr
+```
+Now open your browser to `http://0.0.0.0:8090` and follow your instinct :rocket:
 
 ## Contributing
 
