@@ -5,7 +5,7 @@ F = Fixtures.new
 describe TwitterAPI do
   consumer_key = "consumer:k3y"
   consumer_secret = "consumer:s3cret"
-  access_token = TwitterAPI::TokenResponse.new(F.oauth_token_access, F.oauth_token_secret_access)
+  access_token = TwitterAPI::TokenPair.new(F.oauth_token_access, F.oauth_token_secret_access)
 
   api = TestTwitterAPI.new(consumer_key, consumer_secret, F.whitelisted_callback_url)
   api_unverified_callback_url = TestTwitterAPI.new(consumer_key, consumer_secret, "https://other.url")
@@ -13,7 +13,7 @@ describe TwitterAPI do
   describe "#get_token" do
     it "generates a request token + secret" do
       api.get_token.should eq(
-        TwitterAPI::TokenResponse.new(F.oauth_token, F.oauth_token_secret))
+        TwitterAPI::TokenPair.new(F.oauth_token, F.oauth_token_secret))
     end
     it "throws an error if the callback is not verified" do
       expect_raises(TwitterAPI::CallbackNotConfirmed) do

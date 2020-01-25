@@ -9,10 +9,10 @@ callback_path = URI.parse(callback_url).path
 
 auth_client = TwitterAPI.new(consumer_key, consumer_secret, callback_url)
 
-Users = Hash(String, TwitterAPI::TokenResponse).new
+Users = Hash(String, TwitterAPI::TokenPair).new
 Tokens = Set(String).new
 
-def credentials(ctx) : {String?, TwitterAPI::TokenResponse?}
+def credentials(ctx) : {String?, TwitterAPI::TokenPair?}
   app_token = ctx.request.headers["token"]?
   twitter_token = app_token.try{ Users[app_token]? }
   {app_token, twitter_token}
@@ -40,7 +40,7 @@ get callback_path do |ctx|
   
   app_token = UUID.random.to_s
   # store the access token and secret - to be used for future authenticated requests to the TwitterAPI
-  Users[app_token] = TwitterAPI::TokenResponse.new(token, secret)
+  Users[app_token] = TwitterAPI::TokenPair.new(token, secret)
 
   ctx.response.headers.add "Location", "/?token=#{app_token}"
   ctx.response.status_code = 302

@@ -26,7 +26,7 @@ class TwitterAPI
     @t_auth = TwitterAuth.new(@consumer_secret)
   end
 
-  def get_token : TokenResponse
+  def get_token : TokenPair
     auth_params = {
       "oauth_callback" => @callback_url
     }
@@ -37,7 +37,7 @@ class TwitterAPI
     TwitterAPI.parse_token_response(body)
   end
 
-  def upgrade_token(token : String, verifier : String) : TokenResponse
+  def upgrade_token(token : String, verifier : String) : TokenPair
     auth_params = {
       "oauth_token" => token,
       "oauth_verifier" => verifier
@@ -52,7 +52,7 @@ class TwitterAPI
   # Returns a representation of the requesting user if authentication was successful;
   # raises an exception if not. Use this method to test if supplied user credentials are valid.
   # https://developer.twitter.com/en/docs/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials
-  def verify(token : TokenResponse)
+  def verify(token : TokenPair)
     user_auth = TwitterAuth.new(@consumer_secret, token.oauth_token_secret)
 
     auth_params = {
@@ -67,7 +67,7 @@ class TwitterAPI
   # Once an access_token has been invalidated, new creation attempts will yield a different
   # Access Token and usage of the invalidated token will no longer be allowed.
   # https://developer.twitter.com/en/docs/basics/authentication/api-reference/invalidate_access_token
-  def invalidate_token(token : TokenResponse)
+  def invalidate_token(token : TokenPair)
     user_auth = TwitterAuth.new(@consumer_secret, token.oauth_token_secret)
 
     auth_params = {
@@ -96,17 +96,17 @@ class TwitterAPI
     "OAuth #{auth_params.map{ |k,v| "#{k}=\"#{TwitterAuth.escape(v)}\"" }.join(", ")}"
   end
 
-  def self.parse_token_response(res) : TokenResponse
+  def self.parse_token_response(res) : TokenPair
     res_body = res.split("&").map(&.split("=")).to_h
 
-    TokenResponse.from_response_body(res_body)
+    TokenPair.from_response_body(res_body)
   end
 
   
-  record TokenResponse, oauth_token : String, oauth_token_secret : String do
-    def self.from_response_body(res_body : Hash(String, String)) : TokenResponse
+  record TokenPair, oauth_token : String, oauth_token_secret : String do
+    def self.from_response_body(res_body : Hash(String, String)) : TokenPair
       if ["true", nil].includes?(res_body["oauth_callback_confirmed"]?)
-        TokenResponse.new(res_body["oauth_token"], res_body["oauth_token_secret"])
+        TokenPair.new(res_body["oauth_token"], res_body["oauth_token_secret"])
       else
         raise CallbackNotConfirmed.new
       end
