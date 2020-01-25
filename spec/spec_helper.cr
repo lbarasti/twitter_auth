@@ -43,6 +43,7 @@ class TestTwitterAPI < TwitterAPI
         "oauth_verifier=\"#{TwitterAuth.escape(oauth_verifier)}\"")
       auth_header.should contain(
         "oauth_consumer_key=\"#{TwitterAuth.escape(@consumer_key)}\"")
+      params["oauth_verifier"].should eq oauth_verifier
 
       "oauth_token=#{oauth_token_access}&" \
       "oauth_token_secret=#{oauth_token_secret_access}"

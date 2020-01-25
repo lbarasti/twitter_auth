@@ -8,10 +8,11 @@ class TwitterAPI
   @@access_token_url = "https://api.twitter.com//oauth/access_token"
   @@verify_credentials_url = "https://api.twitter.com/1.1/account/verify_credentials.json"
   @@invalidate_token_url = "https://api.twitter.com/1.1/oauth/invalidate_token"
+  @@empty_params = {} of String => String
 
   # Creates a new `TwitterAPI` with the specified [Twitter App credentials](https://developer.twitter.com/en/apps/).
   def initialize(@consumer_key : String, @consumer_secret : String, @callback_url : String)
-    @t_auth = TwitterAuth.new(@consumer_secret)
+    @app_auth = TwitterAuth.new(@consumer_secret)
   end
 
   # Allows a Consumer application to obtain an OAuth Request Token to request user authorization.
@@ -24,8 +25,7 @@ class TwitterAPI
       "oauth_callback" => @callback_url
     }
 
-    body = exec(:post, @@request_token_url,
-      {"Authorization" => self.auth_header("post", @@request_token_url, auth_params)}, {} of String => String)
+    body = exec_signed(:post, @@request_token_url, auth_params)
 
     TwitterAPI.parse_token_response(body)
   end
@@ -41,8 +41,7 @@ class TwitterAPI
       "oauth_verifier" => verifier
     }
 
-    body = exec(:post, @@access_token_url,
-      {"Authorization" => self.auth_header("post", @@access_token_url, auth_params)}, {"oauth_verifier" => verifier})
+    body = exec_signed(:post, @@access_token_url, auth_params, {"oauth_verifier" => verifier})
 
     TwitterAPI.parse_token_response(body)
   end
@@ -58,8 +57,7 @@ class TwitterAPI
       "oauth_token" => token.oauth_token
     }
 
-    exec(:get, @@verify_credentials_url,
-      {"Authorization" => self.auth_header("get", @@verify_credentials_url, auth_params, user_auth)}, {} of String => String)
+    exec_signed(:get, @@verify_credentials_url, auth_params, @@empty_params, auth = user_auth)
   end
 
   # Revokes an issued OAuth Access Token by presenting its client credentials.
@@ -75,8 +73,7 @@ class TwitterAPI
       "oauth_token" => token.oauth_token
     }
 
-    exec(:post, @@invalidate_token_url,
-      {"Authorization" => self.auth_header("post", @@invalidate_token_url, auth_params, user_auth)}, {} of String => String)
+    exec_signed(:post, @@invalidate_token_url, auth_params, @@empty_params, auth = user_auth)
   end
 
   # Returns the `/authenticate` URL with the OAuth Request Token passed as query string parameter.
@@ -87,14 +84,6 @@ class TwitterAPI
 
   # A struct encapsulating OAuth Token and OAuth Token Secret.
   record TokenPair, oauth_token : String, oauth_token_secret : String do
-    def self.from_response(res_body : Hash(String, String)) : TokenPair
-      if ["true", nil].includes?(res_body["oauth_callback_confirmed"]?)
-        TokenPair.new(res_body["oauth_token"], res_body["oauth_token_secret"])
-      else
-        raise CallbackNotConfirmed.new
-      end
-    end
-
     def [](idx : Int32)
       [oauth_token, oauth_token_secret][idx]
     end
@@ -105,6 +94,8 @@ class TwitterAPI
   end
 
   # Defines how HTTP requests are issued within the library.
+  # 
+  # Returns a String representing the body of the response.
   #
   # This method can be overriden to provide a custom HTTP client.
   protected def exec(method : Symbol, url : String, headers : Hash(String, String), query_params : Hash(String, String))
@@ -119,10 +110,20 @@ class TwitterAPI
   protected def self.parse_token_response(res) : TokenPair
     res_body = res.split("&").map(&.split("=")).to_h
 
-    TokenPair.from_response(res_body)
+    if ["true", nil].includes?(res_body["oauth_callback_confirmed"]?)
+      TokenPair.new(res_body["oauth_token"], res_body["oauth_token_secret"])
+    else
+      raise CallbackNotConfirmed.new
+    end
   end
 
-  private def auth_header(method : String, url : String, auth_params : Hash(String, String), auth = @t_auth) : String
+  private def exec_signed(method : Symbol, url : String, headers : Hash(String, String),
+                          query_params : Hash(String, String) = @@empty_params, auth = @app_auth)
+    signed_headers = {"Authorization" => self.auth_header(method.to_s, url, headers, auth)}
+    exec(method, url, signed_headers, query_params)
+  end
+
+  private def auth_header(method : String, url : String, auth_params : Hash(String, String), auth = @app_auth) : String
     nonce = TwitterAuth.nonce()
     timestamp = Time.utc.to_unix.to_s
     auth_params.merge!({
