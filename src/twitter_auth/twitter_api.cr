@@ -13,22 +13,16 @@ class TwitterAPI
     @@authenticate_url % request_token
   end
 
-  DefaultClient = -> (
-    method : Symbol,
-    url : String,
-    headers : Hash(String, String),
-    query_params : Hash(String, String)
-  ) {
+  protected def exec(method : Symbol, url : String, headers : Hash(String, String), query_params : Hash(String, String))
     http_params = HTTP::Params.encode(query_params)
     http_headers = HTTP::Headers.new.tap { |hh| headers.each {|(k,v)| hh[k] = v} }
     uri = URI.parse(url + "?" + http_params)
     method_str = method.to_s.upcase
 
     HTTP::Client.exec(method_str, uri, http_headers).body
-  }
+  end
 
-  def initialize(@consumer_key : String, @consumer_secret : String,
-    @callback_url : String, @post : Proc(Symbol, String, Hash(String, String), Hash(String, String), String) = DefaultClient)
+  def initialize(@consumer_key : String, @consumer_secret : String, @callback_url : String)
     @t_auth = TwitterAuth.new(@consumer_secret)
   end
 
@@ -37,7 +31,7 @@ class TwitterAPI
       "oauth_callback" => @callback_url
     }
 
-    body = @post.call(:post, @@request_token_url,
+    body = exec(:post, @@request_token_url,
       {"Authorization" => self.auth_header("post", @@request_token_url, auth_params)}, {} of String => String)
 
     TwitterAPI.parse_token_response(body)
@@ -49,7 +43,7 @@ class TwitterAPI
       "oauth_verifier" => verifier
     }
 
-    body = @post.call(:post, @@access_token_url,
+    body = exec(:post, @@access_token_url,
       {"Authorization" => self.auth_header("post", @@access_token_url, auth_params)}, {"oauth_verifier" => verifier})
 
     TwitterAPI.parse_token_response(body)
@@ -65,7 +59,7 @@ class TwitterAPI
       "oauth_token" => token.oauth_token
     }
 
-    @post.call(:get, @@verify_credentials_url,
+    exec(:get, @@verify_credentials_url,
       {"Authorization" => self.auth_header("get", @@verify_credentials_url, auth_params, user_auth)}, {} of String => String)
   end
 
@@ -80,7 +74,7 @@ class TwitterAPI
       "oauth_token" => token.oauth_token
     }
 
-    @post.call(:post, @@invalidate_token_url,
+    exec(:post, @@invalidate_token_url,
       {"Authorization" => self.auth_header("post", @@invalidate_token_url, auth_params, user_auth)}, {} of String => String)
   end
 
