@@ -10,11 +10,11 @@
 
 1. Add the dependency to your `shard.yml`:
 
-   ```yaml
-   dependencies:
-     twitter_auth:
-       github: lbarasti/twitter_auth
-   ```
+```yaml
+dependencies:
+  twitter_auth:
+    github: lbarasti/twitter_auth
+```
 
 2. Run `shards install`
 
