@@ -4,7 +4,7 @@
 
 # twitter_auth
 
-TwitterAuth is a library that simplifies adding the "login with Twitter" functionality to your Crystal web application.
+*twitter_auth* is a library that simplifies adding the **Sign in with Twitter** functionality to your Crystal web application.
 
 ## Installation
 
@@ -20,7 +20,7 @@ TwitterAuth is a library that simplifies adding the "login with Twitter" functio
 
 ## Usage
 
-Here is how you can initialise a Twitter authentication client:
+Initialise a Twitter authentication client:
 ```crystal
 require "twitter_auth"
 
