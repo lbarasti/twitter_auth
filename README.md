@@ -46,6 +46,10 @@ get "/callback-url" do |ctx|
 end
 ```
 
+## API Documentation
+
+The *twitter_auth* API is documented [here](https://lbarasti.com/twitter_auth/docs/).
+
 ## Development
 
 ### Running the tests
