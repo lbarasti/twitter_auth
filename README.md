@@ -61,7 +61,7 @@ For more info on the `twitter_auth` API you can browse the [API docs](https://lb
 
 ## 3-legged OAuth flow
 When a user clicks on the button
-![alt text](/examples/kemal_integration/public/sign-in-with-twitter.png "Sign in with Twitter")
+![Sign in with Twitter](media/sign-in-with-twitter.png "Sign in with Twitter")
 your application will initiate a [3-legged OAuth flow](https://developer.twitter.com/en/docs/basics/authentication/oauth-1-0a/obtaining-user-access-tokens).
 
 For a minimal implementation, you just need to define the following endpoints.
