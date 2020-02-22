@@ -25,6 +25,9 @@ describe TwitterAPI do
     it "converts a request token into an access one" do
       api.upgrade_token(F.oauth_token, F.oauth_verifier).should eq(access_token)
     end
+    it "converts a request token pair into an access one" do
+      api.upgrade_token(F.token_pair, F.oauth_verifier).should eq(access_token)
+    end
   end
   describe "#verify" do
     it "returns a representation of the requesting user" do

@@ -10,7 +10,8 @@ module FixturesModule
     oauth_token_secret = "oauth:token:s3cret",
     oauth_token_access = "acc3ss:token",
     oauth_token_secret_access = "acc3ss:secret",
-    user_id = "38895958"
+    user_id = "38895958",
+    token_pair = TwitterAPI::TokenPair.new("oauth:tok3n", "acc3ss:secret")
 end
 
 class Fixtures
