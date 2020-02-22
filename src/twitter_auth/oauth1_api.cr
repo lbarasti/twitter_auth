@@ -7,7 +7,7 @@ abstract class OAuth1API
 
   # Creates a new `OAuth1API` with the specified credentials.
   def initialize(@consumer_key : String, @consumer_secret : String, @callback_url : String)
-    @app_auth = SimpleOAuth.new(@consumer_secret)
+    @app_auth = SimpleOAuth::Signature.new(@consumer_secret)
   end
 
   # Allows a Consumer application to obtain an OAuth Request Token to request user authorization.
@@ -29,7 +29,7 @@ abstract class OAuth1API
   #
   # Returns a `TokenPair` representing the OAuth Access Token data.
   def upgrade_token(token : TokenPair, verifier : String) : TokenPair
-    user_auth = SimpleOAuth.new(@consumer_secret, token.oauth_token_secret)
+    user_auth = SimpleOAuth::Signature.new(@consumer_secret, token.oauth_token_secret)
     auth_params = {
       "oauth_token" => token.oauth_token,
       "oauth_verifier" => verifier
@@ -88,12 +88,12 @@ abstract class OAuth1API
   end
 
   private def auth_header(method : String, url : String, auth_params : Hash(String, String), auth = @app_auth) : String
-    nonce = SimpleOAuth.nonce()
+    nonce = SimpleOAuth::Signature.nonce()
     timestamp = Time.utc.to_unix.to_s
     auth_params.merge!({
       "oauth_consumer_key" => @consumer_key,
       "oauth_nonce" => nonce,
-      "oauth_signature_method" => SimpleOAuth::SignatureMethod,
+      "oauth_signature_method" => SimpleOAuth::Signature::SignatureMethod,
       "oauth_timestamp" => timestamp,
       "oauth_version" => @@oauth_version
     })
@@ -102,6 +102,6 @@ abstract class OAuth1API
 
     auth_params["oauth_signature"] = oauth_signature
 
-    "OAuth #{auth_params.map{ |k,v| "#{k}=\"#{SimpleOAuth.escape(v)}\"" }.join(", ")}"
+    "OAuth #{auth_params.map{ |k,v| "#{k}=\"#{SimpleOAuth::Signature.escape(v)}\"" }.join(", ")}"
   end
 end

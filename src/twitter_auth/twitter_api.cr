@@ -13,7 +13,7 @@ class TwitterAPI < OAuth1API
   #
   # See the [Twitter documentation](https://developer.twitter.com/en/docs/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials)
   def verify(token : TokenPair)
-    user_auth = SimpleOAuth.new(@consumer_secret, token.oauth_token_secret)
+    user_auth = SimpleOAuth::Signature.new(@consumer_secret, token.oauth_token_secret)
 
     auth_params = {
       "oauth_token" => token.oauth_token
@@ -29,7 +29,7 @@ class TwitterAPI < OAuth1API
   #
   # See the [Twitter API reference](https://developer.twitter.com/en/docs/basics/authentication/api-reference/invalidate_access_token)
   def invalidate_token(token : TokenPair)
-    user_auth = SimpleOAuth.new(@consumer_secret, token.oauth_token_secret)
+    user_auth = SimpleOAuth::Signature.new(@consumer_secret, token.oauth_token_secret)
 
     auth_params = {
       "oauth_token" => token.oauth_token

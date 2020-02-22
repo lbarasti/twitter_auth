@@ -1,6 +1,8 @@
 require "./spec_helper"
 
-describe SimpleOAuth do
+include SimpleOAuth
+
+describe Signature do
   consumer_secret = "kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw"
   token_secret = "LswwdoUaIvS8ltyTt5jkRh4J50vUPVVHtR2YPi5kE"
 
@@ -19,7 +21,7 @@ describe SimpleOAuth do
   expected_signature = "hCtSmYh+iHYCEqBWrE7C7hYmtUk="
 
   it "encodes the signing key from the consumer secret" do
-    SimpleOAuth.new("a=s3cret/!")
+    Signature.new("a=s3cret/!")
       .signing_key
       .should eq("a%3Ds3cret%2F%21&")
   end
@@ -28,36 +30,36 @@ describe SimpleOAuth do
     # example taken from https://developer.twitter.com/en/docs/basics/authentication/guides/creating-a-signature.html
     signature_base_string = "POST&https%3A%2F%2Fapi.twitter.com%2F1.1%2Fstatuses%2Fupdate.json&include_entities%3Dtrue%26oauth_consumer_key%3Dxvz1evFS4wEEPTGEFPHBog%26oauth_nonce%3DkYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1318622958%26oauth_token%3D370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb%26oauth_version%3D1.0%26status%3DHello%2520Ladies%2520%252B%2520Gentlemen%252C%2520a%2520signed%2520OAuth%2520request%2521"
 
-    signature = SimpleOAuth.new(consumer_secret, token_secret).signature(signature_base_string)
+    signature = Signature.new(consumer_secret, token_secret).signature(signature_base_string)
     signature.should eq(expected_signature)
   end
 
   it "generates a signature from http method, url and parameters" do
-    SimpleOAuth.new(consumer_secret, token_secret)
+    Signature.new(consumer_secret, token_secret)
       .signature("post", base_url, parameters)
       .should eq(expected_signature)
     
   end
   
   it "stores the signature method" do
-    SimpleOAuth::SignatureMethod.should be("HMAC-SHA1")
+    Signature::SignatureMethod.should be("HMAC-SHA1")
   end
 
   it "can generate an oauth parameter string" do
-    SimpleOAuth.parameter_string(parameters).should eq(parameter_string)
+    Signature.parameter_string(parameters).should eq(parameter_string)
   end
 
   it "can generate a signature_base_string" do
     expected = "POST&https%3A%2F%2Fapi.twitter.com%2F1.1%2Fstatuses%2Fupdate.json&include_entities%3Dtrue%26oauth_consumer_key%3Dxvz1evFS4wEEPTGEFPHBog%26oauth_nonce%3DkYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1318622958%26oauth_token%3D370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb%26oauth_version%3D1.0%26status%3DHello%2520Ladies%2520%252B%2520Gentlemen%252C%2520a%2520signed%2520OAuth%2520request%2521"
 
-    SimpleOAuth.signature_base_string("post", base_url, parameter_string).should eq(expected)
+    Signature.signature_base_string("post", base_url, parameter_string).should eq(expected)
   end
 
   it "generates non-empty nonce" do
-    SimpleOAuth.nonce().empty?.should be_false
+    Signature.nonce().empty?.should be_false
   end
 
   it "generates a nonce comprising only characters" do
-    (SimpleOAuth.nonce() =~ /[^A-Za-z]/).should be_nil
+    (Signature.nonce() =~ /[^A-Za-z]/).should be_nil
   end
 end
