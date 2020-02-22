@@ -35,7 +35,7 @@ class TestTwitterAPI < TwitterAPI
       "oauth_token=#{oauth_token}&" \
       "oauth_token_secret=#{oauth_token_secret}&" \
       "oauth_callback_confirmed=#{@callback_url==whitelisted_callback_url}"
-    when "https://api.twitter.com//oauth/access_token"
+    when "https://api.twitter.com/oauth/access_token"
       # Step 3 of https://developer.twitter.com/en/docs/basics/authentication/overview/3-legged-oauth.html
       auth_header.should contain(
         "oauth_token=\"#{TwitterAuth.escape(oauth_token)}\"")

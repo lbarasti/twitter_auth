@@ -5,7 +5,7 @@ class TwitterAPI
   @@oauth_version = "1.0"
   @@request_token_url = "https://api.twitter.com/oauth/request_token"
   @@authenticate_url = "https://api.twitter.com/oauth/authenticate?oauth_token=%s"
-  @@access_token_url = "https://api.twitter.com//oauth/access_token"
+  @@access_token_url = "https://api.twitter.com/oauth/access_token"
   @@verify_credentials_url = "https://api.twitter.com/1.1/account/verify_credentials.json"
   @@invalidate_token_url = "https://api.twitter.com/1.1/oauth/invalidate_token"
   @@empty_params = {} of String => String
