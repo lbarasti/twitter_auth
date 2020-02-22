@@ -1,4 +1,5 @@
 require "http"
+require "oauth"
 require "./twitter_auth"
 
 abstract class OAuth1API
@@ -8,19 +9,25 @@ abstract class OAuth1API
   # Creates a new `OAuth1API` with the specified credentials.
   def initialize(@consumer_key : String, @consumer_secret : String, @callback_url : String)
     @app_auth = TwitterAuth.new(@consumer_secret)
+    @consumer = OAuth::Consumer.new("", @consumer_key, @consumer_secret,
+      request_token_uri: @@request_token_url,
+      authorize_uri: @@authenticate_url,
+      access_token_uri: @@access_token_url)
   end
 
   # Allows a Consumer application to obtain an OAuth Request Token to request user authorization.
   #
   # Returns a `TokenPair` representing the OAuth Request Token data.
   def get_token : TokenPair
-    auth_params = {
-      "oauth_callback" => @callback_url
-    }
+    # auth_params = {
+    #   "oauth_callback" => @callback_url
+    # }
 
-    body = exec_signed(:post, @@request_token_url, auth_params)
+    # body = exec_signed(:post, @@request_token_url, auth_params)
 
-    OAuth1API.parse_token_response(body)
+    # OAuth1API.parse_token_response(body)
+    t = @consumer.get_request_token(@callback_url)
+    TokenPair.new(t.token, t.secret)
   end
 
   # Converts the OAuth Request Token into an OAuth Access Token that can be used to call the API on the users' behalf.
@@ -29,14 +36,16 @@ abstract class OAuth1API
   #
   # Returns a `TokenPair` representing the OAuth Access Token data.
   def upgrade_token(token : String, verifier : String) : TokenPair
-    auth_params = {
-      "oauth_token" => token,
-      "oauth_verifier" => verifier
-    }
+    # auth_params = {
+    #   "oauth_token" => token,
+    #   "oauth_verifier" => verifier
+    # }
 
-    body = exec_signed(:post, @@access_token_url, auth_params, {"oauth_verifier" => verifier})
+    # body = exec_signed(:post, @@access_token_url, auth_params, {"oauth_verifier" => verifier})
 
-    OAuth1API.parse_token_response(body)
+    # OAuth1API.parse_token_response(body)
+    t = @consumer.get_access_token(OAuth::AccessToken.new(token, ""), verifier)
+    TokenPair.new(t.token, t.secret)
   end
 
   # Converts the OAuth Request Token into an OAuth Access Token that can be used to call the API on the users' behalf.
@@ -45,15 +54,17 @@ abstract class OAuth1API
   #
   # Returns a `TokenPair` representing the OAuth Access Token data.
   def upgrade_token(token : TokenPair, verifier : String) : TokenPair
-    user_auth = TwitterAuth.new(@consumer_secret, token.oauth_token_secret)
-    auth_params = {
-      "oauth_token" => token.oauth_token,
-      "oauth_verifier" => verifier
-    }
+    # user_auth = TwitterAuth.new(@consumer_secret, token.oauth_token_secret)
+    # auth_params = {
+    #   "oauth_token" => token.oauth_token,
+    #   "oauth_verifier" => verifier
+    # }
 
-    body = exec_signed(:post, @@access_token_url, auth_params, {"oauth_verifier" => verifier}, auth = user_auth)
+    # body = exec_signed(:post, @@access_token_url, auth_params, {"oauth_verifier" => verifier}, auth = user_auth)
 
-    TumblrAPI.parse_token_response(body)
+    # TumblrAPI.parse_token_response(body)
+    t = @consumer.get_access_token(OAuth::AccessToken.new(token.oauth_token, token.oauth_token_secret), verifier)
+    TokenPair.new(t.token, t.secret)
   end
 
   # Returns the `/authenticate` URL with the OAuth Request Token passed as query string parameter.
