@@ -29,9 +29,9 @@ class TestTwitterAPI < TwitterAPI
     when "https://api.twitter.com/oauth/request_token"
       # Step 1 of https://developer.twitter.com/en/docs/basics/authentication/overview/3-legged-oauth.html
       auth_header.should contain(
-        "oauth_callback=\"#{TwitterAuth.escape(@callback_url)}\"")
+        "oauth_callback=\"#{SimpleOAuth.escape(@callback_url)}\"")
       auth_header.should contain(
-        "oauth_consumer_key=\"#{TwitterAuth.escape(@consumer_key)}\"")
+        "oauth_consumer_key=\"#{SimpleOAuth.escape(@consumer_key)}\"")
 
       "oauth_token=#{oauth_token}&" \
       "oauth_token_secret=#{oauth_token_secret}&" \
@@ -39,11 +39,11 @@ class TestTwitterAPI < TwitterAPI
     when "https://api.twitter.com/oauth/access_token"
       # Step 3 of https://developer.twitter.com/en/docs/basics/authentication/overview/3-legged-oauth.html
       auth_header.should contain(
-        "oauth_token=\"#{TwitterAuth.escape(oauth_token)}\"")
+        "oauth_token=\"#{SimpleOAuth.escape(oauth_token)}\"")
       auth_header.should contain(
-        "oauth_verifier=\"#{TwitterAuth.escape(oauth_verifier)}\"")
+        "oauth_verifier=\"#{SimpleOAuth.escape(oauth_verifier)}\"")
       auth_header.should contain(
-        "oauth_consumer_key=\"#{TwitterAuth.escape(@consumer_key)}\"")
+        "oauth_consumer_key=\"#{SimpleOAuth.escape(@consumer_key)}\"")
       params["oauth_verifier"].should eq oauth_verifier
 
       "oauth_token=#{oauth_token_access}&" \
@@ -51,12 +51,12 @@ class TestTwitterAPI < TwitterAPI
     when "https://api.twitter.com/1.1/account/verify_credentials.json"
       # See https://developer.twitter.com/en/docs/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials
       auth_header.should contain(
-        "oauth_token=\"#{TwitterAuth.escape(oauth_token_access)}\"")
+        "oauth_token=\"#{SimpleOAuth.escape(oauth_token_access)}\"")
       "{\"id\": #{user_id},\"id_str\": \"#{user_id}\"}"
     when "https://api.twitter.com/1.1/oauth/invalidate_token"
       # See https://developer.twitter.com/en/docs/basics/authentication/api-reference/invalidate_access_token
       auth_header.should contain(
-        "oauth_token=\"#{TwitterAuth.escape(oauth_token_access)}\"")
+        "oauth_token=\"#{SimpleOAuth.escape(oauth_token_access)}\"")
       "{\"access_token\":\"#{oauth_token_access}\"}"
     else
       raise Exception.new("Unexpected Twitter URL")

@@ -1,4 +1,4 @@
-require "./twitter_auth"
+require "./simple_oauth"
 require "./oauth1_api"
 
 class TwitterAPI < OAuth1API
@@ -13,7 +13,7 @@ class TwitterAPI < OAuth1API
   #
   # See the [Twitter documentation](https://developer.twitter.com/en/docs/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials)
   def verify(token : TokenPair)
-    user_auth = TwitterAuth.new(@consumer_secret, token.oauth_token_secret)
+    user_auth = SimpleOAuth.new(@consumer_secret, token.oauth_token_secret)
 
     auth_params = {
       "oauth_token" => token.oauth_token
@@ -29,7 +29,7 @@ class TwitterAPI < OAuth1API
   #
   # See the [Twitter API reference](https://developer.twitter.com/en/docs/basics/authentication/api-reference/invalidate_access_token)
   def invalidate_token(token : TokenPair)
-    user_auth = TwitterAuth.new(@consumer_secret, token.oauth_token_secret)
+    user_auth = SimpleOAuth.new(@consumer_secret, token.oauth_token_secret)
 
     auth_params = {
       "oauth_token" => token.oauth_token
@@ -38,8 +38,7 @@ class TwitterAPI < OAuth1API
     exec_signed(:post, @@invalidate_token_url, auth_params, @@empty_params, auth = user_auth)
   end
 
-  # Overrides the default implementation to rely on the signing method supported by Twitter
-  def upgrade_token(token : TokenPair, verifier : String) : TokenPair
-    self.upgrade_token(token.oauth_token, verifier)
+  def upgrade_token(token : String, verifier : String) : TokenPair
+    upgrade_token(TokenPair.new(token, ""), verifier)
   end
 end
