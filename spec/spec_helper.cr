@@ -27,16 +27,6 @@ class TestTwitterAPI < TwitterAPI
     auth_header = headers["Authorization"]
     auth_header.should match(/^OAuth /)
     case url
-    when "https://api.twitter.com/oauth/request_token"
-      # Step 1 of https://developer.twitter.com/en/docs/basics/authentication/overview/3-legged-oauth.html
-      auth_header.should contain(
-        "oauth_callback=\"#{Signature.escape(@callback_url)}\"")
-      auth_header.should contain(
-        "oauth_consumer_key=\"#{Signature.escape(@consumer_key)}\"")
-
-      "oauth_token=#{oauth_token}&" \
-      "oauth_token_secret=#{oauth_token_secret}&" \
-      "oauth_callback_confirmed=#{@callback_url==whitelisted_callback_url}"
     when "https://api.twitter.com/oauth/access_token"
       # Step 3 of https://developer.twitter.com/en/docs/basics/authentication/overview/3-legged-oauth.html
       auth_header.should contain(
