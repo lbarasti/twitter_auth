@@ -11,7 +11,9 @@ targets:
 dependencies:
   kemal:
     github: kemalcr/kemal
+  simple_oauth:
+    github: lbarasti/simple_oauth
 
-crystal: 0.32.1
+crystal: 0.33.0
 
 license: MIT

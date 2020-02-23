@@ -1,9 +1,14 @@
 name: twitter_auth
-version: 1.0.0
+version: 1.0.1
 
 authors:
   - lbarasti
 
-crystal: 0.32.1
+dependencies:
+  simple_oauth:
+    github: lbarasti/simple_oauth
+    version: 1.0.0
+
+crystal: 0.33.0
 
 license: MIT

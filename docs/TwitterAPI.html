@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.31.1">
+<meta name="generator" content="Crystal Docs 0.32.1">
 
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="js/doc.js"></script>
@@ -40,28 +40,8 @@
   <div class="types-list">
     <ul>
   
-  <li class="parent open current" data-id="github.com/lbarasti/twitter_auth/TwitterAPI" data-name="twitterapi">
+  <li class=" current" data-id="github.com/lbarasti/twitter_auth/TwitterAPI" data-name="twitterapi">
       <a href="TwitterAPI.html">TwitterAPI</a>
-      
-        <ul>
-  
-  <li class=" " data-id="github.com/lbarasti/twitter_auth/TwitterAPI/CallbackNotConfirmed" data-name="twitterapi::callbacknotconfirmed">
-      <a href="TwitterAPI/CallbackNotConfirmed.html">CallbackNotConfirmed</a>
-      
-    </li>
-  
-  <li class=" " data-id="github.com/lbarasti/twitter_auth/TwitterAPI/TokenPair" data-name="twitterapi::tokenpair">
-      <a href="TwitterAPI/TokenPair.html">TokenPair</a>
-      
-    </li>
-  
-</ul>
-
-      
-    </li>
-  
-  <li class=" " data-id="github.com/lbarasti/twitter_auth/TwitterAuth" data-name="twitterauth">
-      <a href="TwitterAuth.html">TwitterAuth</a>
       
     </li>
   
@@ -79,7 +59,7 @@
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="TwitterAPI.html">TwitterAPI</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="TwitterAPI.html">TwitterAPI</a></li><li class="superclass">SimpleOAuth::Consumer</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -107,8 +87,8 @@
   </h2>
   
     
-      <a href="https://github.com/lbarasti/twitter_auth/blob/2fc303a54b3bef7067d48dd5720c701059c2631c/src/twitter_auth/twitter_api.cr#L4" target="_blank">
-        twitter_auth/twitter_api.cr
+      <a href="https://github.com/lbarasti/twitter_auth/blob/7f13b47e5973a57306e3c0d061aa849bd5e0030e/src/twitter_auth.cr#L4" target="_blank">
+        twitter_auth.cr
       </a>
     
     <br/>
@@ -118,45 +98,7 @@
 
 
 
-  <h2>
-    <a id="constructors" class="anchor" href="#constructors">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructors
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#new(consumer_key:String,consumer_secret:String,callback_url:String)-class-method" class="signature"><strong>.new</strong>(consumer_key : String, consumer_secret : String, callback_url : String)</a>
-        
-          <div class="summary"><p>Creates a new <code><a href="TwitterAPI.html">TwitterAPI</a></code> with the specified <a href="https://developer.twitter.com/en/apps/" target="_blank">Twitter App credentials</a>.</p></div>
-        
-      </li>
-    
-  </ul>
 
-
-
-  <h2>
-    <a id="class-method-summary" class="anchor" href="#class-method-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Class Method Summary
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#authenticate_url(request_token:String)-class-method" class="signature"><strong>.authenticate_url</strong>(request_token : String)</a>
-        
-          <div class="summary"><p>Returns the <code>/authenticate</code> URL with the OAuth Request Token passed as query string parameter.</p></div>
-        
-      </li>
-    
-  </ul>
 
 
 
@@ -171,13 +113,6 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#get_token:TokenPair-instance-method" class="signature"><strong>#get_token</strong> : TokenPair</a>
-        
-          <div class="summary"><p>Allows a Consumer application to obtain an OAuth Request Token to request user authorization.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#invalidate_token(token:TokenPair)-instance-method" class="signature"><strong>#invalidate_token</strong>(token : TokenPair)</a>
         
           <div class="summary"><p>Revokes an issued OAuth Access Token by presenting its client credentials.</p></div>
@@ -186,8 +121,6 @@
     
       <li class="entry-summary">
         <a href="#upgrade_token(token:String,verifier:String):TokenPair-instance-method" class="signature"><strong>#upgrade_token</strong>(token : String, verifier : String) : TokenPair</a>
-        
-          <div class="summary"><p>Converts the OAuth Request Token into an OAuth Access Token that can be used to call the Twitter API on the users' behalf.</p></div>
         
       </li>
     
@@ -226,73 +159,20 @@
 
 
   
+    
+
+
+    
+
+
+    
+
+
+  
 </div>
 
 
-  <h2>
-    <a id="constructor-detail" class="anchor" href="#constructor-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructor Detail
-  </h2>
-  
-    <div class="entry-detail" id="new(consumer_key:String,consumer_secret:String,callback_url:String)-class-method">
-      <div class="signature">
-        
-        def self.<strong>new</strong>(consumer_key : String, consumer_secret : String, callback_url : String)
 
-        <a class="method-permalink" href="#new(consumer_key:String,consumer_secret:String,callback_url:String)-class-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Creates a new <code><a href="TwitterAPI.html">TwitterAPI</a></code> with the specified <a href="https://developer.twitter.com/en/apps/" target="_blank">Twitter App credentials</a>.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/lbarasti/twitter_auth/blob/2fc303a54b3bef7067d48dd5720c701059c2631c/src/twitter_auth/twitter_api.cr#L14" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-
-
-
-  <h2>
-    <a id="class-method-detail" class="anchor" href="#class-method-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Class Method Detail
-  </h2>
-  
-    <div class="entry-detail" id="authenticate_url(request_token:String)-class-method">
-      <div class="signature">
-        
-        def self.<strong>authenticate_url</strong>(request_token : String)
-
-        <a class="method-permalink" href="#authenticate_url(request_token:String)-class-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns the <code>/authenticate</code> URL with the OAuth Request Token passed as query string parameter.
-This is used in Step 2 of the 3-legged OAuth flow.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/lbarasti/twitter_auth/blob/2fc303a54b3bef7067d48dd5720c701059c2631c/src/twitter_auth/twitter_api.cr#L81" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
 
 
 
@@ -305,35 +185,10 @@ This is used in Step 2 of the 3-legged OAuth flow.</p>
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="get_token:TokenPair-instance-method">
-      <div class="signature">
-        
-        def <strong>get_token</strong> : <a href="TwitterAPI/TokenPair.html">TokenPair</a>
-
-        <a class="method-permalink" href="#get_token:TokenPair-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Allows a Consumer application to obtain an OAuth Request Token to request user authorization.</p>
-
-<p>Returns a <code><a href="TwitterAPI/TokenPair.html">TokenPair</a></code> representing the OAuth Request Token data.</p>
-
-<p>See the <a href="https://developer.twitter.com/en/docs/basics/authentication/api-reference/request_token" target="_blank">Twitter API reference</a>.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/lbarasti/twitter_auth/blob/2fc303a54b3bef7067d48dd5720c701059c2631c/src/twitter_auth/twitter_api.cr#L23" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="invalidate_token(token:TokenPair)-instance-method">
       <div class="signature">
         
-        def <strong>invalidate_token</strong>(token : <a href="TwitterAPI/TokenPair.html">TokenPair</a>)
+        def <strong>invalidate_token</strong>(token : TokenPair)
 
         <a class="method-permalink" href="#invalidate_token(token:TokenPair)-instance-method">#</a>
       </div>
@@ -351,7 +206,7 @@ OAuth Access Token and usage of the invalidated token will no longer be allowed.
       <br/>
       <div>
         
-          [<a href="https://github.com/lbarasti/twitter_auth/blob/2fc303a54b3bef7067d48dd5720c701059c2631c/src/twitter_auth/twitter_api.cr#L69" target="_blank">View source</a>]
+          [<a href="https://github.com/lbarasti/twitter_auth/blob/7f13b47e5973a57306e3c0d061aa849bd5e0030e/src/twitter_auth.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -359,24 +214,15 @@ OAuth Access Token and usage of the invalidated token will no longer be allowed.
     <div class="entry-detail" id="upgrade_token(token:String,verifier:String):TokenPair-instance-method">
       <div class="signature">
         
-        def <strong>upgrade_token</strong>(token : String, verifier : String) : <a href="TwitterAPI/TokenPair.html">TokenPair</a>
+        def <strong>upgrade_token</strong>(token : String, verifier : String) : TokenPair
 
         <a class="method-permalink" href="#upgrade_token(token:String,verifier:String):TokenPair-instance-method">#</a>
       </div>
       
-        <div class="doc">
-          
-          <p>Converts the OAuth Request Token into an OAuth Access Token that can be used to call the Twitter API on the users' behalf.</p>
-
-<p>Returns a <code><a href="TwitterAPI/TokenPair.html">TokenPair</a></code> representing the OAuth Access Token data.</p>
-
-<p>See the <a href="https://developer.twitter.com/en/docs/basics/authentication/api-reference/access_token" target="_blank">Twitter API reference</a></p>
-        </div>
-      
       <br/>
       <div>
         
-          [<a href="https://github.com/lbarasti/twitter_auth/blob/2fc303a54b3bef7067d48dd5720c701059c2631c/src/twitter_auth/twitter_api.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/lbarasti/twitter_auth/blob/7f13b47e5973a57306e3c0d061aa849bd5e0030e/src/twitter_auth.cr#L41" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -384,7 +230,7 @@ OAuth Access Token and usage of the invalidated token will no longer be allowed.
     <div class="entry-detail" id="verify(token:TokenPair)-instance-method">
       <div class="signature">
         
-        def <strong>verify</strong>(token : <a href="TwitterAPI/TokenPair.html">TokenPair</a>)
+        def <strong>verify</strong>(token : TokenPair)
 
         <a class="method-permalink" href="#verify(token:TokenPair)-instance-method">#</a>
       </div>
@@ -400,7 +246,7 @@ raises an exception if not. Use this method to test if supplied user credentials
       <br/>
       <div>
         
-          [<a href="https://github.com/lbarasti/twitter_auth/blob/2fc303a54b3bef7067d48dd5720c701059c2631c/src/twitter_auth/twitter_api.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/lbarasti/twitter_auth/blob/7f13b47e5973a57306e3c0d061aa849bd5e0030e/src/twitter_auth.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>
