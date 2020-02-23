@@ -1,8 +1,9 @@
-require "./simple_oauth/**"
+require "simple_oauth/signature"
+require "simple_oauth/consumer"
 
 class TwitterAPI < SimpleOAuth::Consumer
   @@request_token_url = "https://api.twitter.com/oauth/request_token"
-  @@authenticate_url = "https://api.twitter.com/oauth/authenticate?oauth_token=%s"
+  @@authenticate_url = "https://api.twitter.com/oauth/authenticate"
   @@access_token_url = "https://api.twitter.com/oauth/access_token"
   @@verify_credentials_url = "https://api.twitter.com/1.1/account/verify_credentials.json"
   @@invalidate_token_url = "https://api.twitter.com/1.1/oauth/invalidate_token"
