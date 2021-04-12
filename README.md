@@ -1,6 +1,7 @@
 [![GitHub release](https://img.shields.io/github/release/lbarasti/twitter_auth.svg)](https://github.com/lbarasti/twitter_auth/releases)
 ![Build Status](https://github.com/lbarasti/twitter_auth/workflows/build/badge.svg)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Docs](https://img.shields.io/badge/docs-available-brightgreen.svg)](https://lbarasti.github.io/twitter_auth)
 
 # twitter_auth
 

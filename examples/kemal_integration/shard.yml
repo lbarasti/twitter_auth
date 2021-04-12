@@ -14,6 +14,6 @@ dependencies:
   simple_oauth:
     github: lbarasti/simple_oauth
 
-crystal: 0.33.0
+crystal: 1.0.0
 
 license: MIT
