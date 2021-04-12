@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="crystal_docs.project_version" content="1.0.2">
+<meta name="crystal_docs.project_name" content="twitter_auth">
+
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/doc.js"></script>
+
+  <meta name="repository-name" content="twitter_auth">
+  <title>twitter_auth 1.0.2</title>
+  <script type="text/javascript">
+  CrystalDocs.base_path = "";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="index.html">
+          twitter_auth
+        </a>
+      </h1>
+
+      <span class="project-version">
+        1.0.2
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class=" " data-id="twitter_auth/TwitterAPI" data-name="twitterapi">
+      <a href="TwitterAPI.html">TwitterAPI</a>
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<p><a href="https://github.com/lbarasti/twitter_auth/releases"><img src="https://img.shields.io/github/release/lbarasti/twitter_auth.svg" alt="GitHub release"/></a>
+<img src="https://github.com/lbarasti/twitter_auth/workflows/build/badge.svg" alt="Build Status"/>
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"/></a>
+<a href="https://lbarasti.github.io/twitter_auth"><img src="https://img.shields.io/badge/docs-available-brightgreen.svg" alt="Docs"/></a></p>
+
+<h1><a id="twitter-auth" class="anchor" href="#twitter-auth">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>twitter_auth</h1>
+
+<p>A library to add the <strong>Sign in with Twitter</strong> functionality to your Crystal web app, in a few lines of code.</p>
+
+<h2><a id="installation" class="anchor" href="#installation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Installation</h2>
+
+<ol><li>Add the dependency to your <code>shard.yml</code>:</li></ol>
+
+<pre><code class="language-yaml">dependencies:
+  twitter_auth:
+    github: lbarasti/twitter_auth</code></pre>
+
+<ol><li>Run <code>shards install</code></li></ol>
+
+<h2><a id="usage" class="anchor" href="#usage">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Usage</h2>
+
+<h4><a id="initializing-a-twitter-authorization-client" class="anchor" href="#initializing-a-twitter-authorization-client">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Initializing a Twitter authorization client</h4>
+
+<p>Twitter apps are assigned a <code>consumer key</code> and a <code>consumer secret</code>. These are used to sign any request to the Twitter API.
+Here is how you create a Twitter authorization client:</p>
+
+<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;twitter_auth&quot;</span>
+
+auth_client <span class="o">=</span> <span class="t">TwitterAPI</span>.<span class="k">new</span>(consumer_key, consumer_secret, callback_url)</code></pre>
+
+<h4><a id="requesting-an-o-auth-request-token" class="anchor" href="#requesting-an-o-auth-request-token">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Requesting an OAuth Request Token</h4>
+
+<p>When a user requests to sign in with Twitter, the first step for your app is to ask Twitter for an OAuth Requests Token.</p>
+
+<pre><code class="language-crystal">request_token <span class="o">=</span> auth_client.get_token</code></pre>
+
+<p>Your app will then redirect the user to a Twitter-owned login screen - <code>TwitterAPI.authenticate_url(request_token)</code> - where they can authorize your app to issue requests on their behalf.</p>
+
+<h4><a id="upgrading-to-an-o-auth-access-token" class="anchor" href="#upgrading-to-an-o-auth-access-token">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Upgrading to an OAuth Access Token</h4>
+
+<p>After the sign-in, the user is redirected to your app via a whitelisted callback URL. With the parameters included in the request, your app can now upgrade the request token to an access one.</p>
+
+<pre><code class="language-crystal">access_token <span class="o">=</span> auth_client.upgrade_token(request_token, verifier)</code></pre>
+
+<h4><a id="verifying-a-users-identity" class="anchor" href="#verifying-a-users-identity">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Verifying a user's identity</h4>
+
+<p>Now that you have an OAuth Access Token, you can verify the identity of the user who signed in.</p>
+
+<pre><code class="language-crystal">auth_client.verify(access_token)</code></pre>
+
+<p>When successful, this returns a <code>String</code> in JSON format, containing information about the user, e.g. user id, Twitter handle and description.</p>
+
+<h4><a id="invalidating-an-o-auth-access-token" class="anchor" href="#invalidating-an-o-auth-access-token">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Invalidating an OAuth Access Token</h4>
+
+<p>By design, a Twitter user's access token never expires. Nonetheless, it's likely that your app will need to invalidate the access token at some point.</p>
+
+<pre><code class="language-crystal">auth_client.invalidate_token(access_token)</code></pre>
+
+<p>This will require the user to authorize your app again, next time they try to sign in with Twitter.</p>
+
+<hr/><p>For more info on the <code>twitter_auth</code> API you can browse the <a href="https://lbarasti.com/twitter_auth/docs/">API docs</a> pages.</p>
+
+<h2><a id="3-legged-o-auth-flow" class="anchor" href="#3-legged-o-auth-flow">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>3-legged OAuth flow</h2>
+
+<p>When a user clicks on the button
+<img src="media/sign-in-with-twitter.png "Sign in with Twitter"" alt="Sign in with Twitter"/>
+your application will initiate a <a href="https://developer.twitter.com/en/docs/basics/authentication/oauth-1-0a/obtaining-user-access-tokens">3-legged OAuth flow</a>.</p>
+
+<p>For a minimal implementation, you just need to define the following endpoints.</p>
+
+<pre><code class="language-crystal">get <span class="s">&quot;/authenticate&quot;</span> <span class="k">do</span> <span class="o">|</span>ctx<span class="o">|</span>
+  request_token <span class="o">=</span> auth_client.get_token.oauth_token
+  <span class="o">&lt;</span>your<span class="o">-</span>code<span class="o">-</span>here<span class="o">&gt;</span> <span class="c"># store the request token for later verification in the /callback-url step</span>
+  ctx.redirect <span class="t">TwitterAPI</span>.authenticate_url(request_token)
+<span class="k">end</span>
+
+get <span class="s">&quot;/callback-url&quot;</span> <span class="k">do</span> <span class="o">|</span>ctx<span class="o">|</span>
+  token <span class="o">=</span> ctx.params.query[<span class="s">&quot;oauth_token&quot;</span>]
+  <span class="o">&lt;</span>your<span class="o">-</span>code<span class="o">-</span>here<span class="o">&gt;</span> <span class="c"># verify that the token matches the request token stored in the step above</span>
+  verifier <span class="o">=</span> ctx.params.query[<span class="s">&quot;oauth_verifier&quot;</span>]
+  token, secret <span class="o">=</span> auth_client.upgrade_token(token, verifier)
+  <span class="o">&lt;</span>your<span class="o">-</span>code<span class="o">-</span>here<span class="o">&gt;</span> <span class="c"># store the access token and secret - to be used for future authenticated requests to the TwitterAPI</span>
+  ctx.redirect <span class="s">&quot;/#some-token-here&quot;</span>
+<span class="k">end</span></code></pre>
+
+<p>Remember to configure your <a href="https://developer.twitter.com/en/apps/">Twitter app</a> to whitelist the callback URL.</p>
+
+<h4><a id="demo" class="anchor" href="#demo">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Demo</h4>
+
+<p>You can play with a demo of the example app on <a href="https://this-is-trimmer.herokuapp.com/">heroku</a>.</p>
+
+<h2><a id="faq" class="anchor" href="#faq">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>FAQ</h2>
+
+<h4><a id="why-do-i-want-this" class="anchor" href="#why-do-i-want-this">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Why do I want this?</h4>
+
+<p>Your users will authenticate to your app via Twitter, so that your app does not have to deal with user management and forgotten passwords.</p>
+
+<h4><a id="is-it-authentication-or-authorization" class="anchor" href="#is-it-authentication-or-authorization">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Is it authentication or authorization?</h4>
+
+<p>The OAuth flow lets the user <strong>authorize</strong> your app to read information about them, so that you can <strong>authenticate</strong> the user into your app.</p>
+
+<h4><a id="can-i-use-my-own-http-client-to-issue-calls-to-the-twitter-api" class="anchor" href="#can-i-use-my-own-http-client-to-issue-calls-to-the-twitter-api">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Can I use my own HTTP client to issue calls to the Twitter API?</h4>
+
+<p>Yes, you can. Just subclass <code><a href="TwitterAPI.html">TwitterAPI</a></code> and override the <a href="https://github.com/lbarasti/twitter_auth/blob/v1.0.0/src/twitter_auth/twitter_api.cr#L101">exec</a> method.</p>
+
+<h2><a id="development" class="anchor" href="#development">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Development</h2>
+
+<h4><a id="running-the-tests" class="anchor" href="#running-the-tests">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Running the tests</h4>
+
+<pre><code class="language-crystal">crystal spec</code></pre>
+
+<h4><a id="running-the-example-app" class="anchor" href="#running-the-example-app">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Running the example app</h4>
+
+<p>Before running the example app, make sure the following environment variables are defined consistently with your Twitter app settings - you can define a new Twitter app <a href="https://developer.twitter.com/en/apps/">here</a>:</p>
+
+<pre><code class="language-crystal"><span class="t">TWITTER_CONSUMER_KEY</span>
+<span class="t">TWITTER_CONSUMER_SECRET</span>
+<span class="t">TWITTER_CALLBACK_URL</span></code></pre>
+
+<p>Mind that, in order to get the app to work locally, you'll need to have <code>localhost:8090/your-callback-path</code> in the app's <em>callback URL</em> list.</p>
+
+<p>Next, run the following.</p>
+
+<pre><code class="language-crystal">$ cd examples/kemal_integration
+$ shards install
+$ crystal src/server.cr</code></pre>
+
+<p>Now open your browser to <code>http://0.0.0.0:8090</code> and follow your instinct :rocket:</p>
+
+<h2><a id="contributing" class="anchor" href="#contributing">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Contributing</h2>
+
+<ol><li>Fork it (&lt;https://github.com/lbarasti/twitter_auth/fork>)</li><li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li><li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li><li>Push to the branch (<code>git push origin my-new-feature</code>)</li><li>Create a new Pull Request</li></ol>
+
+<h2><a id="contributors" class="anchor" href="#contributors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Contributors</h2>
+
+<ul><li><a href="https://github.com/lbarasti">lbarasti</a> - creator and maintainer</li></ul>
+</div>
+</body>
+</html>
